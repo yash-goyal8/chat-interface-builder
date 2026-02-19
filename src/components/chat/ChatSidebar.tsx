@@ -1,4 +1,4 @@
-import { Plus, MessageSquare, Ellipsis } from "lucide-react";
+import { Plus, Ellipsis } from "lucide-react";
 import { Conversation } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 
@@ -34,14 +34,17 @@ export function ChatSidebar({
 
   const groupOrder = ["today", "yesterday", "previous7", "previous30"];
 
-  return (
-    <div
-      className={cn(
-        "flex flex-col h-full bg-sidebar text-sidebar-foreground transition-all duration-300 overflow-hidden",
-        isOpen ? "w-64" : "w-0"
-      )}
-    >
-      <div className="flex items-center justify-between p-3 min-w-[256px]">
+  const handleSelectConversation = (id: string) => {
+    onSelectConversation(id);
+    // Close sidebar on mobile/tablet after selecting
+    if (window.innerWidth < 1024) {
+      onToggle();
+    }
+  };
+
+  const sidebarContent = (
+    <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground w-64">
+      <div className="flex items-center justify-between p-3">
         <button
           onClick={onToggle}
           className="p-2 rounded-lg hover:bg-sidebar-accent transition-colors"
@@ -71,7 +74,7 @@ export function ChatSidebar({
               {grouped[group].map((conv) => (
                 <button
                   key={conv.id}
-                  onClick={() => onSelectConversation(conv.id)}
+                  onClick={() => handleSelectConversation(conv.id)}
                   className={cn(
                     "w-full text-left px-3 py-2 rounded-lg text-sm truncate flex items-center gap-2 group transition-colors",
                     activeConversationId === conv.id
@@ -91,7 +94,7 @@ export function ChatSidebar({
         )}
       </div>
 
-      <div className="p-3 border-t border-sidebar-border min-w-[256px]">
+      <div className="p-3 border-t border-sidebar-border">
         <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-sidebar-accent transition-colors">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white text-sm font-medium">
             U
@@ -100,5 +103,31 @@ export function ChatSidebar({
         </button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* Desktop: push sidebar */}
+      <div
+        className={cn(
+          "hidden lg:flex flex-col h-full transition-all duration-300 overflow-hidden",
+          isOpen ? "w-64" : "w-0"
+        )}
+      >
+        {sidebarContent}
+      </div>
+
+      {/* Mobile/Tablet: overlay sidebar */}
+      {isOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div className="relative z-10">{sidebarContent}</div>
+          <div
+            className="flex-1 bg-black/60"
+            onClick={onToggle}
+            aria-label="Close sidebar"
+          />
+        </div>
+      )}
+    </>
   );
 }
