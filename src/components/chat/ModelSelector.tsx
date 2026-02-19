@@ -2,10 +2,10 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const models = ["GPT-4o", "GPT-4o mini", "GPT-4", "GPT-3.5"];
+const models = ["GPT-5.2", "GPT-5.3 Codex", "GPT-5o mini"];
 
 export function ModelSelector() {
-  const [selected, setSelected] = useState("GPT-4o");
+  const [selected, setSelected] = useState("GPT-5.2");
   const [open, setOpen] = useState(false);
 
   return (
