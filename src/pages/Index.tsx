@@ -6,6 +6,7 @@ import { ChatInput } from "@/components/chat/ChatInput";
 import { WelcomeScreen } from "@/components/chat/WelcomeScreen";
 import { ModelSelector } from "@/components/chat/ModelSelector";
 import { PanelLeft } from "lucide-react";
+import { AdSidebar } from "@/components/chat/AdSidebar";
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -151,6 +152,9 @@ const Index = () => {
         {/* Input */}
         <ChatInput onSend={handleSend} disabled={isTyping} />
       </div>
+
+      {/* Right Ad Sidebar */}
+      <AdSidebar />
     </div>
   );
 };
