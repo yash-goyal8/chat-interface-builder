@@ -5,15 +5,28 @@ import { ChatMessage } from "@/components/chat/ChatMessage";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { WelcomeScreen } from "@/components/chat/WelcomeScreen";
 import { ModelSelector } from "@/components/chat/ModelSelector";
+import { MobileAdBanner } from "@/components/chat/MobileAdBanner";
+import { TabletAdBanner } from "@/components/chat/TabletAdBanner";
 import { PanelLeft } from "lucide-react";
 import { AdSidebar } from "@/components/chat/AdSidebar";
+import { useIsDesktop } from "@/hooks/use-mobile";
 
 const Index = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const isDesktop = useIsDesktop();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>(mockConversations);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const initializedRef = useRef(false);
+
+  // Set sidebar default based on screen size (only on mount)
+  useEffect(() => {
+    if (!initializedRef.current && isDesktop !== undefined) {
+      setSidebarOpen(isDesktop);
+      initializedRef.current = true;
+    }
+  }, [isDesktop]);
 
   const activeConversation = conversations.find((c) => c.id === activeConversationId) || null;
 
@@ -29,7 +42,6 @@ const Index = () => {
     const userMessage: Message = { id: Date.now().toString(), role: "user", content: text };
 
     if (!activeConversation) {
-      // Create new conversation
       const newConv: Conversation = {
         id: Date.now().toString(),
         title: text.slice(0, 40) + (text.length > 40 ? "..." : ""),
@@ -39,7 +51,6 @@ const Index = () => {
       setConversations((prev) => [newConv, ...prev]);
       setActiveConversationId(newConv.id);
 
-      // Simulate response
       setIsTyping(true);
       setTimeout(() => {
         const assistantMessage: Message = {
@@ -53,7 +64,6 @@ const Index = () => {
         setIsTyping(false);
       }, 1500);
     } else {
-      // Add to existing conversation
       setConversations((prev) =>
         prev.map((c) =>
           c.id === activeConversationId ? { ...c, messages: [...c.messages, userMessage] } : c
@@ -83,6 +93,33 @@ const Index = () => {
 
   const handleSuggestionClick = (text: string) => {
     handleSend(text);
+  };
+
+  // Build messages with inline ads every 3 messages (mobile/tablet only)
+  const renderMessagesWithAds = () => {
+    if (!activeConversation) return null;
+    const elements: React.ReactNode[] = [];
+
+    activeConversation.messages.forEach((msg, idx) => {
+      elements.push(
+        <ChatMessage
+          key={msg.id}
+          message={msg}
+          isTyping={
+            isTyping &&
+            idx === activeConversation.messages.length - 1 &&
+            msg.role === "assistant"
+          }
+        />
+      );
+
+      // Insert ad after every 3rd message
+      if ((idx + 1) % 3 === 0 && idx < activeConversation.messages.length - 1) {
+        elements.push(<MobileAdBanner key={`ad-${idx}`} />);
+      }
+    });
+
+    return elements;
   };
 
   return (
@@ -117,17 +154,7 @@ const Index = () => {
         {activeConversation ? (
           <div className="flex-1 overflow-y-auto">
             <div className="max-w-3xl mx-auto px-4 py-6">
-              {activeConversation.messages.map((msg, idx) => (
-                <ChatMessage
-                  key={msg.id}
-                  message={msg}
-                  isTyping={
-                    isTyping &&
-                    idx === activeConversation.messages.length - 1 &&
-                    msg.role === "assistant"
-                  }
-                />
-              ))}
+              {renderMessagesWithAds()}
               {isTyping && activeConversation.messages[activeConversation.messages.length - 1]?.role === "user" && (
                 <div className="flex gap-4 mb-6">
                   <div className="w-7 h-7 rounded-full bg-foreground flex items-center justify-center shrink-0 mt-1">
@@ -148,6 +175,9 @@ const Index = () => {
         ) : (
           <WelcomeScreen onSuggestionClick={handleSuggestionClick} />
         )}
+
+        {/* Tablet sticky leaderboard banner */}
+        <TabletAdBanner />
 
         {/* Input */}
         <ChatInput onSend={handleSend} disabled={isTyping} />

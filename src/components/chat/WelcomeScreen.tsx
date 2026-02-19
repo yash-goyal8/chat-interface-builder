@@ -14,8 +14,8 @@ const suggestions = [
 export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-4">
-      <h1 className="text-3xl font-semibold mb-10 text-foreground">What can I help with?</h1>
-      <div className="grid grid-cols-2 gap-3 max-w-xl w-full">
+      <h1 className="text-2xl md:text-3xl font-semibold mb-10 text-foreground">What can I help with?</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-xl w-full">
         {suggestions.map((s) => (
           <button
             key={s.text}
@@ -28,6 +28,22 @@ export function WelcomeScreen({ onSuggestionClick }: WelcomeScreenProps) {
             </span>
           </button>
         ))}
+      </div>
+
+      {/* Mobile ad: 320x250 */}
+      <div className="flex flex-col items-center gap-1 mt-8 md:hidden">
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Advertisement</span>
+        <div className="w-[320px] h-[250px] rounded-lg border border-border bg-muted/40 flex items-center justify-center">
+          <span className="text-xs text-muted-foreground">320 × 250</span>
+        </div>
+      </div>
+
+      {/* Tablet ad: 468x60 */}
+      <div className="hidden md:flex lg:hidden flex-col items-center gap-1 mt-8">
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Advertisement</span>
+        <div className="w-[468px] h-[60px] rounded-lg border border-border bg-muted/40 flex items-center justify-center">
+          <span className="text-xs text-muted-foreground">468 × 60</span>
+        </div>
       </div>
     </div>
   );
