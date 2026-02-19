@@ -1,73 +1,119 @@
-# Welcome to your Lovable project
+# ChatGPT UI Clone — Responsive with Ad Monetization
 
-## Project info
+A pixel-perfect ChatGPT interface clone built with **React**, **TypeScript**, **Tailwind CSS**, and **Vite**. Features a fully responsive layout optimized for three device tiers with strategically placed IAB-standard ad slots.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 🖥️ Device Layouts & Size Ratios
 
-There are several ways of editing your application.
+### Desktop (1024px+)
 
-**Use Lovable**
+| Section | Width | Ratio |
+|---------|-------|-------|
+| Left Sidebar | 256px | ~18% |
+| Chat Area | flexible (~884px on 1440px screen) | ~61% |
+| Right Ad Sidebar | 300px | ~21% |
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+- **Left sidebar** pushes the content area (toggle open/close)
+- **Right ad sidebar** is always visible with two IAB-standard slots:
+  - `300×250` Medium Rectangle
+  - `300×600` Half Page
+- **No inline ads** — the sidebar handles all monetization
+- Chat content is capped at `768px` max-width for optimal readability
 
-Changes made via Lovable will be committed automatically to this repo.
+### Tablet (768px – 1023px)
 
-**Use your preferred IDE**
+| Section | Width | Ratio |
+|---------|-------|-------|
+| Chat Area | 100% viewport | 100% |
+| Sticky Banner | 728×90 | Fixed above input |
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **Left sidebar** becomes an overlay with a semi-transparent backdrop (closed by default)
+- **Right ad sidebar** is hidden
+- **Suggestion grid** stays 2 columns
+- **Ad placements**:
+  - `468×60` banner below suggestion chips on welcome screen
+  - `728×90` sticky leaderboard pinned above the chat input
+  - `320×100` inline ads every 3 messages in the chat scroll
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Phone (below 768px)
 
-Follow these steps:
+| Section | Width | Ratio |
+|---------|-------|-------|
+| Chat Area | 100% viewport | 100% |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **Left sidebar** is an overlay (same as tablet)
+- **Right ad sidebar** is hidden
+- **Suggestion grid** collapses to 1 column
+- **Ad placements**:
+  - `320×250` Medium Rectangle below suggestion chips on welcome screen
+  - `320×100` inline ads every 3 messages in the chat scroll
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 📐 Why These Ratios?
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+- **61% chat area (desktop)** follows the 60/40 rule — the primary content dominates visual focus
+- **18% sidebar** matches ChatGPT's standard width — enough for conversation titles without competing for attention
+- **21% ad sidebar (300px)** is the IAB standard width for premium ad units, maximizing fill rate and CPM
+- **Overlay sidebar on mobile/tablet** preserves 100% chat width on smaller screens while keeping navigation accessible
+- **Inline ads every 3 messages** provides monetization without overwhelming the reading experience
+
+---
+
+## 🧩 Ad Sizes & IAB Standards
+
+| Device | Ad Unit | Size | IAB Standard |
+|--------|---------|------|:------------:|
+| Desktop | Medium Rectangle | 300×250 | ✅ |
+| Desktop | Half Page | 300×600 | ✅ |
+| Tablet | Leaderboard (sticky) | 728×90 | ✅ |
+| Tablet | Full Banner (welcome) | 468×60 | ✅ |
+| Mobile | Large Mobile Banner (inline) | 320×100 | ✅ |
+| Mobile | Medium Rectangle (welcome) | 320×250 | ✅ |
+
+---
+
+## 🚀 Tech Stack
+
+- **React 18** + **TypeScript**
+- **Vite** for fast dev/build
+- **Tailwind CSS** with semantic design tokens
+- **shadcn/ui** component library
+- **Lucide React** icons
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/
+│   ├── chat/
+│   │   ├── ChatSidebar.tsx      # Responsive: push (desktop) / overlay (mobile/tablet)
+│   │   ├── ChatMessage.tsx      # Individual message bubble
+│   │   ├── ChatInput.tsx        # Message input with attachments
+│   │   ├── WelcomeScreen.tsx    # Welcome with device-specific ad slots
+│   │   ├── ModelSelector.tsx    # GPT model dropdown
+│   │   ├── AdSidebar.tsx        # Desktop-only 300px right sidebar
+│   │   ├── MobileAdBanner.tsx   # 320×100 inline ad (mobile/tablet)
+│   │   └── TabletAdBanner.tsx   # 728×90 sticky leaderboard (tablet)
+│   └── ui/                     # shadcn/ui components
+├── hooks/
+│   └── use-mobile.tsx           # useIsMobile() + useIsDesktop() hooks
+├── pages/
+│   └── Index.tsx                # Main layout orchestrator
+└── data/
+    └── mockData.ts              # Mock conversations & responses
+```
+
+## 📦 Getting Started
+
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open [http://localhost:5173](http://localhost:5173) to view the app.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📄 License
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+MIT
