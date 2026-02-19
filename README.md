@@ -1,12 +1,15 @@
 # ChatGPT UI Clone — Responsive with Ad Monetization
 
+<h2 align="center">Desktop</h2>
 <p align="center">
-  ## Desktop
   <img src="public/images/laptop.png" alt="Responsive layout preview - Desktop" width="100%" />
-  ## Tablet
-  <img src="public/images/Tablet.png" alt="Responsive layout preview - Tablet" width="50%" />
-  ## Mobile
-  <img src="public/images/Mobile.png" alt="Responsive layout preview - Mobile" width="50%" />
+</p>
+
+<h2 align="center">Tablet & Mobile</h2>
+<p align="center">
+  <img src="public/images/Tablet.png" alt="Responsive layout preview - Tablet" width="45%" />
+  &nbsp;&nbsp;
+  <img src="public/images/Mobile.png" alt="Responsive layout preview - Mobile" width="45%" />
 </p>
 
 A pixel-perfect ChatGPT interface clone built with **React**, **TypeScript**, **Tailwind CSS**, and **Vite**. Features a fully responsive layout optimized for three device tiers with strategically placed IAB-standard ad slots.
